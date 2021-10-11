@@ -24,4 +24,4 @@ const handleRoutes = (router: Router): void => {
   router.use('/api', routes);
 };
 
-export default [handleCors, handleJson, handleHelmet, handleBodyRequestParsing, handleRoutes];
+export const middleware = [handleCors, handleJson, handleHelmet, handleBodyRequestParsing, handleRoutes];
