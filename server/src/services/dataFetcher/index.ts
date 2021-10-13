@@ -1,15 +1,21 @@
 import fetch, { Request } from 'cross-fetch';
+import { Stock } from '../../types/products';
 
-import { addForceErrorHeader, buildReqHeaders, getApiUrl, handleErrors } from '../utils/http';
+import { withForceErrorHeader, buildReqHeaders, getApiUrl, handleErrors } from '../../utils/http';
+
+type StockResponse = {
+  code: number;
+  response: Stock[];
+};
 
 /**
  * Returns a list of availability info.
  * @param {string} manufacturer The manufacturer which availability is queried.
  * @param {boolean} forceError If true, a header is added to simulate erroneus call to api.
- * @returns {Promise<unknown>} A promise with a list of availability
+ * @returns {Promise<Stock[]>} A promise with a list of product stock
  */
-export async function fetchManufacturerAvailability(manufacturer: string, forceError = false): Promise<unknown> {
-  const headers = forceError ? addForceErrorHeader(buildReqHeaders()) : buildReqHeaders();
+export async function fetchManufacturerAvailability(manufacturer: string): Promise<StockResponse> {
+  const headers = withForceErrorHeader(buildReqHeaders());
   const req = new Request(`${getApiUrl()}/availability/${manufacturer}`, { method: 'GET', headers });
   const res = await fetch(req);
 
