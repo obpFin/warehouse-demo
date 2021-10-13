@@ -1,4 +1,4 @@
-import winston from 'winston';
+import * as winston from 'winston';
 
 const prettyJson = winston.format.printf((info) => {
   if (info.message.constructor === Object) {

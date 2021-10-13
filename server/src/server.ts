@@ -1,5 +1,6 @@
 import express from 'express';
-import middleware from './middleware';
+import dotenv from 'dotenv';
+import { middleware } from './middleware';
 import { applyMiddleware } from './utils';
 import logger from './utils/logger';
 
@@ -12,6 +13,8 @@ process.on('unhandledRejection', (reason) => {
   logger.debug('error', reason);
   process.exit(1);
 });
+
+dotenv.config({ path: './server/src/.env' });
 
 const router = express();
 applyMiddleware(middleware, router);
