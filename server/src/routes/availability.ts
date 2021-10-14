@@ -1,9 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { fetchManufacturerAvailability, StockResponse } from '../services/dataFetcher';
 import { Availability, IManufacturerAvailability } from '../types/products';
 import { parseXML } from '../utils';
 import logger from '../utils/logger';
 import Cache from '../services/cache';
+import { fetchManufacturerAvailability, StockResponse } from '../services/dataFetcher/availability';
 
 const router = Router();
 
@@ -12,6 +12,7 @@ type AvailabilityPayload = {
   AVAILABILITY: Availability;
 };
 
+// /api/availability/:manufacturer
 router.get('/:manufacturer', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const manufacturer = req.params.manufacturer;

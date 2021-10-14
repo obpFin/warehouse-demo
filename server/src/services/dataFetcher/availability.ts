@@ -10,7 +10,6 @@ export type StockResponse = {
 /**
  * Returns a list of availability info.
  * @param {string} manufacturer The manufacturer which availability is queried.
- * @param {boolean} forceError If true, a header is added to simulate erroneus call to api.
  * @returns {Promise<Stock[]>} A promise with a list of product stock
  */
 export async function fetchManufacturerAvailability(manufacturer: string): Promise<StockResponse> {
