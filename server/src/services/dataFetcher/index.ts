@@ -1,11 +1,10 @@
 import fetch, { Request } from 'cross-fetch';
 import { Stock } from '../../types/products';
-
 import { withForceErrorHeader, buildReqHeaders, getApiUrl, handleErrors } from '../../utils/http';
 
-type StockResponse = {
-  code: number;
-  response: Stock[];
+export type StockResponse = {
+  code?: number;
+  response?: Stock[];
 };
 
 /**
