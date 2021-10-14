@@ -1,19 +1,27 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { fetchManufacturerAvailability } from '../services/dataFetcher';
-import { Availability } from '../types/products';
+import { fetchManufacturerAvailability, StockResponse } from '../services/dataFetcher';
+import { Availability, IManufacturerAvailability } from '../types/products';
 import { parseXML } from '../utils';
 import logger from '../utils/logger';
+import Cache from '../services/cache';
 
 const router = Router();
 
-interface AvailabilityPayload {
+type ManufacturerAvailabilityPayload = IManufacturerAvailability & StockResponse;
+type AvailabilityPayload = {
   AVAILABILITY: Availability;
-}
+};
 
 router.get('/:manufacturer', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const manufacturer = req.params.manufacturer;
-    const productsStock = await fetchManufacturerAvailability(manufacturer);
+    let productsStock: ManufacturerAvailabilityPayload | undefined | null =
+      Cache.get<IManufacturerAvailability>(manufacturer);
+
+    if (!productsStock) {
+      productsStock = (await fetchManufacturerAvailability(manufacturer)) as ManufacturerAvailabilityPayload;
+      Cache.set(manufacturer, productsStock);
+    }
 
     if (productsStock.code !== 200 || !Array.isArray(productsStock.response)) {
       return res.status(400).send(`Failed to fetch stock from  ${manufacturer}`);
