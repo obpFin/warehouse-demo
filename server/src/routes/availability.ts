@@ -20,6 +20,7 @@ router.get('/:manufacturer', async (req: Request, res: Response, next: NextFunct
       Cache.get<IManufacturerAvailability>(manufacturer);
 
     if (!productsStock) {
+      logger.info(`${manufacturer} not found from cache, fetching...`);
       productsStock = (await fetchManufacturerAvailability(manufacturer)) as ManufacturerAvailabilityPayload;
       Cache.set(manufacturer, productsStock);
     }
