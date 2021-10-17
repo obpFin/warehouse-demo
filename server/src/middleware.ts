@@ -1,8 +1,12 @@
 import path from 'path';
-import { Router, urlencoded, json } from 'express';
+import express, { Router, urlencoded, json } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { routes } from './routes';
+
+const handleFrontEnd = (router: Router): void => {
+  router.use(express.static(path.resolve(__dirname, './app/build')));
+};
 
 const handleCors = (router: Router): Router => {
   return router.use(cors({ credentials: true, origin: true }));
@@ -24,4 +28,4 @@ const handleRoutes = (router: Router): void => {
   });
 };
 
-export const middleware = [handleCors, handleHelmet, handleBodyRequestParsing, handleRoutes];
+export const middleware = [handleFrontEnd, handleCors, handleHelmet, handleBodyRequestParsing, handleRoutes];
