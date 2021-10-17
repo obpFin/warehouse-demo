@@ -5,8 +5,7 @@ import helmet from 'helmet';
 import { routes } from './routes';
 
 const handleFrontEnd = (router: Router): void => {
-  console.log(path.resolve(__dirname, '../app/build'));
-  router.use(express.static(path.resolve(__dirname, './app/build')));
+  router.use(express.static(path.resolve(__dirname, '../app/build')));
 };
 
 const handleCors = (router: Router): Router => {
@@ -19,7 +18,7 @@ const handleBodyRequestParsing = (router: Router): void => {
 };
 
 const handleHelmet = (router: Router): void => {
-  router.use(helmet());
+  router.use(helmet({ contentSecurityPolicy: false }));
 };
 
 const handleRoutes = (router: Router): void => {
