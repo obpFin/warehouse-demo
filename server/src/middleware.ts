@@ -1,3 +1,4 @@
+import path from 'path';
 import { Router, urlencoded, json } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -18,6 +19,9 @@ const handleHelmet = (router: Router): void => {
 
 const handleRoutes = (router: Router): void => {
   router.use('/api', routes);
+  router.get('*', function (req, res) {
+    res.sendFile(path.resolve(__dirname, './app/build', 'index.html'));
+  });
 };
 
 export const middleware = [handleCors, handleHelmet, handleBodyRequestParsing, handleRoutes];
