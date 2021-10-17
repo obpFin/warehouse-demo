@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const pingBackend = async (): Promise<any[] | undefined> => {
+    let productsResponse;
+    await fetch('/api/products/gloves')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data ', data);
+        productsResponse = data;
+        return productsResponse;
+      })
+      .catch((err) => {
+        console.error(
+          'Error occurred while requesting /api/products/gloves',
+          err
+        );
+        productsResponse = undefined;
+      });
+    return productsResponse;
+  };
+
+  useEffect(() => {
+    pingBackend();
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
