@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { routes } from './routes';
 
 const handleFrontEnd = (router: Router): void => {
+  console.log(path.resolve(__dirname, '../app/build'));
   router.use(express.static(path.resolve(__dirname, './app/build')));
 };
 
@@ -24,7 +25,7 @@ const handleHelmet = (router: Router): void => {
 const handleRoutes = (router: Router): void => {
   router.use('/api', routes);
   router.get('*', function (req, res) {
-    res.sendFile(path.resolve(__dirname, './app/build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, '../app/build', 'index.html'));
   });
 };
 
