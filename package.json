@@ -2,11 +2,10 @@
   "name": "warehouse-demo",
   "version": "1.0.0",
   "description": "warehouse-demo",
-  "main": "index.js",
   "scripts": {
     "start": "node ./dist/server.js",
     "dev": "NODE_ENV=development tsc-watch --onSuccess \"node ./dist/server.js\"",
-    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false tsc && npm install --prefix app && npm run build --prefix app"
+    "heroku-postbuild": "cd app && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [
     "node_modules"
