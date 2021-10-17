@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./dist/server.js",
     "dev": "NODE_ENV=development tsc-watch --onSuccess \"node ./dist/server.js\"",
-    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false tsc && npm install --prefix app && npm run build --prefix app"
+    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false tsc && npm install --prefix app --production --no-optional && npm run build --prefix app"
   },
   "cacheDirectories": [
     "node_modules",
