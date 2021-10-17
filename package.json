@@ -9,8 +9,7 @@
     "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false tsc && npm install --prefix app --production --no-optional && npm run build --prefix app"
   },
   "cacheDirectories": [
-    "node_modules",
-    "app/node_modules"
+    "node_modules"
   ],
   "repository": {
     "type": "git",
