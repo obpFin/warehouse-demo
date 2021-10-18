@@ -13,3 +13,21 @@ a {
 a:visited {
   color: inherit;
 }
+
+table {
+  position: relative;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  top: 50px;
+  position: sticky;
+  top: 150px;
+  z-index: 999;
+  background-color: #282c34;
+}
+
+td, th {
+  padding:5px 25px;
+}
