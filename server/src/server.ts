@@ -19,5 +19,5 @@ dotenv.config({ path: './server/src/.env' });
 const router = express();
 applyMiddleware(middleware, router);
 
-const { PORT = 3000 } = process.env;
+const { PORT = 8000 } = process.env;
 router.listen(PORT, () => logger.info(`Server is running http://localhost:${PORT}...`));

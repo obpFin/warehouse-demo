@@ -2,13 +2,15 @@
   "name": "warehouse-demo",
   "version": "1.0.0",
   "description": "warehouse-demo",
-  "main": "index.js",
   "scripts": {
     "start": "node ./dist/server.js",
     "dev": "NODE_ENV=development tsc-watch --onSuccess \"node ./dist/server.js\"",
-    "postinstall": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "heroku-postbuild": "tsc && cd app && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
+  "cacheDirectories": [
+    "node_modules",
+    "app/node_modules"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/obpFin/warehouse-demo.git"
