@@ -10,7 +10,6 @@ export const fetchProductsByCategory = async (
     .then((response) => response.json())
     .then((data) => {
       productsResponse = data;
-      return productsResponse;
     })
     .catch((err) => {
       console.error(`Error occurred while requesting ${url}`, err);

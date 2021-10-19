@@ -1,7 +1,7 @@
 import { fetchAvailabilityByManufacturer } from './api';
 import { Product, ProductAvailability } from './types/products';
 
-export const mapManufacturersFromProducts = async (
+export const fetchAvailabilityFromProducts = async (
   products: Product[]
 ): Promise<ProductAvailability[]> => {
   const manufacturers = [...new Set(products.map((pr) => pr.manufacturer))];
@@ -10,8 +10,6 @@ export const mapManufacturersFromProducts = async (
   ).catch((err) => {
     console.error(err);
   });
-
-  console.log(avbt);
 
   if (avbt) {
     return avbt.flat();

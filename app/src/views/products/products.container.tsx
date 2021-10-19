@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Session from 'react-session-api';
 import { fetchProductsByCategory } from '../../api';
-import { mapManufacturersFromProducts } from '../../availability';
+import { fetchAvailabilityFromProducts } from '../../availability';
 import WithLoading from '../../components/withLoading';
 import { Product, ProductAvailability } from '../../types/products';
 import Products, { IProductsProps } from './products.component';
@@ -15,7 +16,15 @@ const ProductsContainer = () => {
 
   useEffect(() => {
     async function getProducts() {
-      const products = await fetchProductsByCategory(category);
+      let products = Session.get(category);
+
+      if (!products) {
+        products = await fetchProductsByCategory(category);
+        Session.set(category, JSON.stringify(products));
+      } else {
+        products = JSON.parse(products);
+      }
+
       setLoading(false);
       if (products) {
         setProducts(products);
@@ -26,7 +35,7 @@ const ProductsContainer = () => {
 
   useEffect(() => {
     async function getAvailability() {
-      const avbt = await mapManufacturersFromProducts(products);
+      const avbt = await fetchAvailabilityFromProducts(products);
       setLoading(false);
       if (avbt) {
         setAvailability(avbt);
