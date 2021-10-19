@@ -6,3 +6,8 @@ export type Product = {
   price: number;
   type: string;
 };
+
+export type ProductAvailability = {
+  id: string;
+  stock: string;
+};

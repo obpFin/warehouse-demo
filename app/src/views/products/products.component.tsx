@@ -1,18 +1,29 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
+import { getProductAvailability } from '../../availability';
 import InfiniteScrollTable from '../../components/InfiniteScrollTable';
-import { Product } from '../../types/products';
+import { Product, ProductAvailability } from '../../types/products';
 
 export interface IProductsProps {
   category: string;
   products: Product[];
+  availability: ProductAvailability[];
 }
 
-export default function Products({ products, category }: IProductsProps) {
+export default function Products({
+  products,
+  category,
+  availability,
+}: IProductsProps) {
   if (!products.length) {
     return null;
   }
+
+  const onProductClick = ({ id }: Product) => {
+    console.log('id, ', id);
+    console.log('av, ', getProductAvailability(id, availability));
+  };
 
   return (
     <>
@@ -39,7 +50,7 @@ export default function Products({ products, category }: IProductsProps) {
         <h1 css={css({})}>{category.toUpperCase()}</h1>
         <span></span>
       </div>
-      <InfiniteScrollTable data={products} />
+      <InfiniteScrollTable data={products} onRowClick={onProductClick} />
     </>
   );
 }

@@ -3,11 +3,12 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 interface IProps<T> {
   data: T[];
+  onRowClick: (row: any) => void;
 }
 
 const SLICE_LENGTH = 500;
 
-const InfiniteScrollTable = <T extends {}>({ data }: IProps<T>) => {
+const InfiniteScrollTable = <T extends {}>({ data, onRowClick }: IProps<T>) => {
   const [count, setCount] = useState({
     prev: 0,
     next: SLICE_LENGTH,
@@ -52,7 +53,7 @@ const InfiniteScrollTable = <T extends {}>({ data }: IProps<T>) => {
         </thead>
         <tbody>
           {current.map((p) => (
-            <tr>
+            <tr onClick={() => onRowClick(p)}>
               {getRow(p).map((r) => (
                 <td>{r}</td>
               ))}
