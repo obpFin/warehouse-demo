@@ -12,6 +12,17 @@ type AvailabilityPayload = {
   AVAILABILITY: Availability;
 };
 
+async function fetchManufacturerAvailabilityWithRetry(manufacturer: string, limit = 2) {
+  if (limit === 0) {
+    return undefined;
+  }
+  const proxiedProducts = (await fetchManufacturerAvailability(manufacturer)) as ManufacturerAvailabilityPayload;
+  if (proxiedProducts.code !== 200 || !Array.isArray(proxiedProducts?.response)) {
+    return fetchManufacturerAvailabilityWithRetry(manufacturer, limit - 1);
+  }
+  return proxiedProducts;
+}
+
 // /api/availability/:manufacturer
 router.get('/:manufacturer', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,20 +31,28 @@ router.get('/:manufacturer', async (req: Request, res: Response, next: NextFunct
 
     if (!productsStock) {
       logger.info(`${manufacturer} not found from cache, fetching...`);
-      const proxiedProducts = (await fetchManufacturerAvailability(manufacturer)) as ManufacturerAvailabilityPayload;
+      try {
+        const proxiedProducts = (await fetchManufacturerAvailabilityWithRetry(
+          manufacturer,
+        )) as ManufacturerAvailabilityPayload;
 
-      if (proxiedProducts.code !== 200 || !Array.isArray(proxiedProducts.response)) {
-        return res.status(400).send(`Failed to fetch stock from  ${manufacturer}`);
+        if (!proxiedProducts) {
+          const message = `${manufacturer} Failed to fetch stock from  ${manufacturer}`;
+          logger.warn(message);
+          return res.status(400).send(message);
+        }
+
+        const parsedProductStocks = await Promise.all(
+          proxiedProducts?.response.map(async (p) => {
+            const { AVAILABILITY } = (await parseXML(p.DATAPAYLOAD)) as AvailabilityPayload;
+            return AVAILABILITY.CODE[0] == '200' ? { id: p.id, stock: AVAILABILITY.INSTOCKVALUE[0] } : null;
+          }),
+        );
+        productsStock = parsedProductStocks;
+        Cache.set(manufacturer, parsedProductStocks);
+      } catch (err) {
+        next(err);
       }
-
-      const parsedProductStocks = await Promise.all(
-        proxiedProducts.response.map(async (p) => {
-          const { AVAILABILITY } = (await parseXML(p.DATAPAYLOAD)) as AvailabilityPayload;
-          return AVAILABILITY.CODE[0] == '200' ? { id: p.id, stock: AVAILABILITY.INSTOCKVALUE[0] } : null;
-        }),
-      );
-      productsStock = parsedProductStocks;
-      Cache.set(manufacturer, parsedProductStocks);
     }
     res.send(productsStock);
   } catch (err) {

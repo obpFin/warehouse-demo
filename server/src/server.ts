@@ -5,7 +5,7 @@ import { applyMiddleware } from './utils';
 import logger from './utils/logger';
 
 process.on('uncaughtException', (e) => {
-  logger.log('error', e.message);
+  logger.error('error', e.message);
   process.exit(1);
 });
 
