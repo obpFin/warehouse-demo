@@ -42,7 +42,7 @@ export const mergeProductsWithAvailability = (
 
       products.forEach((pr) => {
         const prAvbt = availabilityList.find((avbt) => {
-          if (!avbt.id || !pr.id) return undefined;
+          if (!avbt) return undefined;
           return avbt.id.toLowerCase() === pr.id.toLowerCase();
         });
         productsWithAvailability.push({ ...pr, stock: prAvbt?.stock });

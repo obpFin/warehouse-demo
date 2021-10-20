@@ -2,9 +2,8 @@
 import { css } from '@emotion/react';
 import Loader from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
-import { getProductAvailability } from '../../availability';
 import InfiniteScrollTable from '../../components/InfiniteScrollTable';
-import { Product, ProductAvailability } from '../../types/products';
+import { Product } from '../../types/products';
 
 export interface IProductsProps {
   fetchingAvailability: boolean;

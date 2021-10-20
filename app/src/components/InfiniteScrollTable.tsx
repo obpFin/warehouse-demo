@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Loader from 'react-loader-spinner';
 
 interface IProps<T> {
   data: T[];
@@ -40,7 +41,9 @@ const InfiniteScrollTable = <T extends {}>({ data }: IProps<T>) => {
       dataLength={current.length}
       next={getMoreData}
       hasMore={hasMore}
-      loader={<h4>Loading...</h4>}
+      loader={
+        <Loader type="ThreeDots" color="#00BFFF" height={25} width={25} />
+      }
     >
       <table>
         <thead>

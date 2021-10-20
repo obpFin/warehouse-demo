@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Categories from './views/categories';
 import ProductsContainer from './views/products/products.container';
-import './App.css';
 import Session from 'react-session-api';
 
 // Use Session storage - TTL 5 min
