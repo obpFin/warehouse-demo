@@ -1,4 +1,5 @@
-import { Product } from './types/products';
+import Session from 'react-session-api';
+import { Product, ProductAvailability } from './types/products';
 
 export const fetchProductsByCategory = async (
   category: string
@@ -9,11 +10,35 @@ export const fetchProductsByCategory = async (
     .then((response) => response.json())
     .then((data) => {
       productsResponse = data;
-      return productsResponse;
     })
     .catch((err) => {
       console.error(`Error occurred while requesting ${url}`, err);
       productsResponse = undefined;
     });
   return productsResponse;
+};
+
+export const fetchAvailabilityByManufacturer = async (
+  manufacturer: string
+): Promise<ProductAvailability[] | undefined> => {
+  const url = `/api/availability/${manufacturer}`;
+  let availabilityResponse;
+  await fetch(url)
+    .then(async (response) => {
+      if (!response.ok) {
+        return undefined;
+      } else {
+        const data = await response.json();
+        Session.set(manufacturer, JSON.stringify(data));
+        return data;
+      }
+    })
+    .then((data) => {
+      availabilityResponse = data;
+    })
+    .catch((err) => {
+      console.error(`Error occurred while requesting ${url}`, err);
+      availabilityResponse = undefined;
+    });
+  return availabilityResponse;
 };

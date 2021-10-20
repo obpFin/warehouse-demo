@@ -16,27 +16,26 @@ type AvailabilityPayload = {
 router.get('/:manufacturer', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const manufacturer = req.params.manufacturer;
-    let productsStock: ManufacturerAvailabilityPayload | undefined | null =
-      Cache.get<IManufacturerAvailability>(manufacturer);
+    let productsStock = Cache.get<{ id: string; stock: string }[]>(manufacturer);
 
     if (!productsStock) {
       logger.info(`${manufacturer} not found from cache, fetching...`);
-      productsStock = (await fetchManufacturerAvailability(manufacturer)) as ManufacturerAvailabilityPayload;
-      Cache.set(manufacturer, productsStock);
+      const proxiedProducts = (await fetchManufacturerAvailability(manufacturer)) as ManufacturerAvailabilityPayload;
+
+      if (proxiedProducts.code !== 200 || !Array.isArray(proxiedProducts.response)) {
+        return res.status(400).send(`Failed to fetch stock from  ${manufacturer}`);
+      }
+
+      const parsedProductStocks = await Promise.all(
+        proxiedProducts.response.map(async (p) => {
+          const { AVAILABILITY } = (await parseXML(p.DATAPAYLOAD)) as AvailabilityPayload;
+          return AVAILABILITY.CODE[0] == '200' ? { id: p.id, stock: AVAILABILITY.INSTOCKVALUE[0] } : null;
+        }),
+      );
+      productsStock = parsedProductStocks;
+      Cache.set(manufacturer, parsedProductStocks);
     }
-
-    if (productsStock.code !== 200 || !Array.isArray(productsStock.response)) {
-      return res.status(400).send(`Failed to fetch stock from  ${manufacturer}`);
-    }
-
-    const parsedProductStocks = await Promise.allSettled(
-      productsStock.response.map(async (p) => {
-        const { AVAILABILITY } = (await parseXML(p.DATAPAYLOAD)) as AvailabilityPayload;
-        return AVAILABILITY.CODE[0] == '200' ? { id: p.id, stock: AVAILABILITY.INSTOCKVALUE[0] } : null;
-      }),
-    );
-
-    res.send(parsedProductStocks);
+    res.send(productsStock);
   } catch (err) {
     logger.error(err);
     return next(err);

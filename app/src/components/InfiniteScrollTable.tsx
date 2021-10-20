@@ -46,15 +46,15 @@ const InfiniteScrollTable = <T extends {}>({ data }: IProps<T>) => {
         <thead>
           <tr>
             {headers.map((h) => (
-              <th>{h}</th>
+              <th key={h}>{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {current.map((p) => (
-            <tr>
+          {current.map((p, idx) => (
+            <tr key={idx}>
               {getRow(p).map((r) => (
-                <td>{r}</td>
+                <td key={r}>{r}</td>
               ))}
             </tr>
           ))}
