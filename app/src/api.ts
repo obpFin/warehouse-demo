@@ -20,19 +20,25 @@ export const fetchProductsByCategory = async (
 
 export const fetchAvailabilityByManufacturer = async (
   manufacturer: string
-): Promise<ProductAvailability[]> => {
+): Promise<ProductAvailability[] | undefined> => {
   const url = `/api/availability/${manufacturer}`;
   let availabilityResponse;
   await fetch(url)
-    .then((response) => response.json())
+    .then(async (response) => {
+      if (!response.ok) {
+        return undefined;
+      } else {
+        const data = await response.json();
+        Session.set(manufacturer, JSON.stringify(data));
+        return data;
+      }
+    })
     .then((data) => {
       availabilityResponse = data;
-      return availabilityResponse;
     })
     .catch((err) => {
       console.error(`Error occurred while requesting ${url}`, err);
       availabilityResponse = undefined;
     });
-  if (!availabilityResponse) return [];
   return availabilityResponse;
 };

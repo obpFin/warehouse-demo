@@ -5,6 +5,7 @@ export type Product = {
   name: string;
   price: number;
   type: string;
+  stock?: string;
 };
 
 export type ProductAvailability = {
