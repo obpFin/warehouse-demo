@@ -6,12 +6,12 @@ Simulates products listing which is initially fetched from slow legacy API. Prod
 
 ## Express server
 
-Install dependencies:  
+How to run:  
   In `/server/src`:     
   run `npm install` & `npm run dev`
 
 ## Create React app
 
-Install dependencies:  
+How to run:  
   In `/app/src`:       
   run `npm install` & `npm start`
